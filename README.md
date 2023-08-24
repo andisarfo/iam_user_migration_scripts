@@ -66,28 +66,29 @@ Before running this script, you should ensure that you have the AWS CLI installe
 
 # Phase 3: Data Migration
 
-#Part 1
+# Part 1 Project Setup and Sample Data Generation - sample_it_team_members_generator.py
 
 I utilized a Python script for generating a sample CSV file that contains information about IT team members and their assigned groups. 
 Here's a breakdown of what the second script sample_it_team_members_generator.py does:
-1. IT Team Member Names: 
+
+1. **IT Team Member Names:** 
 
 The script starts by defining a list named it_team_members containing the names of IT team members. You can customize this list to include the actual names of your team members or use a name generator.
 
-2. Group Names: 
+2. **Group Names:**
 The script defines a list named groups containing the names of the groups: "NetworkAdmin", "LinuxAdmin", "DBAdmin", "CloudAdmin", and "Trainees".
 
-3. Group Assignment and Distribution:
+3. **Group Assignment and Distribution:**
  The script initializes an empty dictionary named group_members to hold the members of each group. It then shuffles the list of IT team members randomly using the random.shuffle function.The script distributes team members evenly into groups by iterating through the shuffled list of team members. The % operator is used to distribute members evenly based on the number of groups.
 
-4. CSV File Creation: 
+4. **CSV File Creation:** 
 The script writes the generated data into the "it_team_members.csv" file. It uses the csv.writer class to create and write the CSV file.The header row is written as ['Name', 'Group'], and for each group, the script writes the username (constructed from the first and last name) and the corresponding group name.
 
-5. Output: 
+5. **Output:** 
 After the data is written to the CSV file, the script prints a success message.
 The resulting CSV file will contain a list of team members with their names and the groups they belong to. This script can be helpful for organizing and managing IT team members' information in a structured format.
 
-#Part 2
+# Part 2 User Provisioning Automation - test_iam_user_create.py
 
 Additionally, I employed a Python script which utilizes the AWS CLI and IAM service to create users, assign them to groups, and set up a default password with a password reset requirement. 
 Here's a breakdown of the script :
