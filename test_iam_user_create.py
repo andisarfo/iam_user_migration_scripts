@@ -1,3 +1,12 @@
+# test_iam_user_create.py
+##
+## This script does the following:
+## Utilizes the AWS CLI and IAM service to create users, assign them to groups, and set up a default password with a password reset requirement. 
+## 
+## How to : python3 test_iam_user_create.py
+## Authur : Andy Sarfo Frimpong
+########################################################################################################################################
+
 import csv
 import subprocess
 import json
