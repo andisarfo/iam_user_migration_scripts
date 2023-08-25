@@ -1,113 +1,54 @@
-# iam_user_migration_scripts
+**Project Overview: Automated User Migration and IAM Management in AWS**
 
-Automated user migration and management of AWS Identity and Access Management (IAM) resources.
-Project Overview:
-Migrate a substantial user base from an on-premises system to AWS by automating the migration process, ensuring data integrity, and efficiently managing AWS Identity and Access Management (IAM) resources. I utilized both Python and Bash scripts to facilitate this automation process.
-Project Goals:
-Migrate 100+ users from an on-premises system to AWS.
-Automate the migration process to reduce manual intervention and potential errors.
-Ensure secure and controlled access to AWS resources using IAM best practices.
+This comprehensive project centers around the seamless migration of a significant user base from an on-premises system to Amazon Web Services (AWS) while ensuring efficient and secure management of AWS Identity and Access Management (IAM) resources. By leveraging a combination of Python and Bash scripting, the project not only facilitates the migration process but also establishes robust IAM practices aligned with security principles.
 
-Project Phases:
-Discovery & Planning
-AWS Setup
-Data Migration
-IAM Management
-Testing & Validation
-Full Migration
-Monitoring & Maintenance
+**Project Goals:**
 
-# Phase 1: Discovery & Planning
+1. **User Migration:** Successfully migrate over 100 users from an existing on-premises system to AWS, eliminating the complexities and potential errors associated with manual migration processes.
 
-Gather detailed information about the existing user data in the on-premises CVS file.
-Identify the AWS services and resources that need to be provisioned for the users' access.
-Plan the migration strategy, considering user roles, permissions, and group structures.
-Define the IAM policies and permissions required for each user group.
+2. **Automation:** Automate the user migration process to minimize manual intervention, reduce errors, and enhance overall efficiency. The use of scripts streamlines the migration, allowing IT teams to focus on strategic tasks.
 
-# Phase 2: AWS Setup
+3. **IAM Best Practices:** Implement IAM best practices to ensure secure and controlled access to AWS resources. This includes structuring users into well-defined groups, defining appropriate permissions, and enforcing Multi-Factor Authentication (MFA) where applicable.
 
-Set up an AWS account if not already established.
-Configure the AWS Management Console and AWS Command Line Interface (CLI) access.
-Create the necessary AWS services, such as Amazon S3 buckets for data storage and Amazon RDS for databases if needed.
+**Project Phases:**
 
-I will utilize an IT team composed of various groups, including Database Administrators, Linux Administrators, Network Administrators, and Cloud Administrators, alongside a separate group dedicated to new Trainees. These Trainees will be granted ReadOnlyAccess permissions.
-DBA
-LinuxAdmin
-NetworkAdmin
-CloudAdmin
-Trainees
+1. **Discovery & Planning:**
+   - Gather detailed user data from the on-premises CSV file, including roles and permissions.
+   - Identify AWS services and resources required to mirror on-premises functionalities.
+   - Plan migration strategy considering user roles, permissions, and group structures.
+   - Define granular IAM policies for each user group to follow the principle of least privilege.
 
-Creating user groups in AWS IAM (Identity and Access Management) is an important step for organizing users and managing permissions efficiently.
+2. **AWS Setup:**
+   - Set up or configure an AWS account if not already established.
+   - Configure AWS Management Console and Command Line Interface (CLI) access for administrators.
+   - Provision essential AWS services such as Amazon S3 buckets and Amazon RDS databases.
 
-## user_group_create.sh
+3. **Data Migration:**
+   - Develop Python scripts to transform and migrate user data from on-premises CSV to AWS.
+   - Utilize the "sample_it_team_members_generator.py" script to generate representative sample CSV data for IT team members and their respective groups.
 
-Here's a breakdown of what the first script user_group_create.sh does:
-i. AWS Region Configuration: It sets the AWS_REGION variable to specify the AWS region where the IAM users and groups will be created. In this case, it's set to "us-east-1."
+4. **IAM Group Creation and Policy Attachment:**
+   - Employ the "user_group_create.sh" Bash script to create user groups in IAM.
+   - Attach AWS managed policies based on roles to each user group, ensuring precise and controlled access:
+     - NetworkAdmin: AmazonVPCFullAccess
+     - LinuxAdmin: AmazonEC2FullAccess
+     - DBAdmin: AmazonRDSFullAccess
+     - CloudAdmin: AdministratorAccess
+     - Trainees: ReadOnlyAccess
 
-ii. Create User Groups: It uses a for loop to create IAM groups with the following names: "NetworkAdmin," "LinuxAdmin," "DBAdmin," "CloudAdmin," and "Trainees." These groups are created in the specified AWS region.
+5. **MFA Implementation:**
+   - Enforce Multi-Factor Authentication (MFA) to enhance security and validate user identities.
+   - Utilize the Okta Authenticator app for MFA implementation.
+   - Create a custom IAM policy "MFA_Required_And_Password_Actions_Policy" to mandate MFA activation for certain actions.
 
-iii. Attach Policies to Groups: It uses aws iam attach-group-policy commands to attach AWS managed policies to the respective IAM groups:
+6. **Testing & Validation:**
+   - Conduct rigorous testing of the automated migration process with a selected subset of users.
+   - Verify that users are granted appropriate access based on their assigned roles and permissions.
+   - Test edge cases and error scenarios to ensure the system's robustness and resilience.
 
-"NetworkAdmin" group gets AmazonVPCFullAccess.
-"LinuxAdmin" group gets AmazonEC2FullAccess.
-"DBAdmin" group gets AmazonRDSFullAccess.
-"CloudAdmin" group gets AdministratorAccess.
+7. **Monitoring & Maintenance:**
+   - Implement AWS CloudTrail and CloudWatch to monitor and audit IAM activities.
+   - Continuously monitor IAM resources, policies, and user groups to ensure adherence to security practices.
+   - Be prepared to iteratively refine policies and configurations as the organization's needs evolve.
 
-By attaching these policies, I'm following the principle of least privilege, ensuring that users have only the necessary permissions for their specific roles. This enhances security and prevents unauthorized or accidental modifications to critical resources.
-
-iv. Attach ReadOnlyAccess Policy: It attaches the ReadOnlyAccess policy to the "Trainees" group. Users in this group can view and analyze resources but cannot make any changes. This policy is suitable for individuals who are still learning and should not have the ability to modify resources.
-
-v. Print Success Message: After creating the groups and attaching policies, it prints a message indicating that the user groups have been created with the specified policies attached.
-
-This script is essentially a part of an AWS IAM setup process. It creates groups with different levels of access (full access for some groups, read-only access for others) and associates these groups with AWS managed policies. The "Trainees" group is given read-only access, while other groups receive more extensive permissions.
-
-Before running this script, you should ensure that you have the AWS CLI installed and configured on your system with the necessary IAM permissions to create groups and attach policies. Additionally, review and adjust the policies to meet your organization's security requirements and access control policies.
-
-
-# Phase 3: Data Migration
-
-# Part 1 Project Setup and Sample Data Generation - sample_it_team_members_generator.py
-
-I utilized a Python script for generating a sample CSV file that contains information about IT team members and their assigned groups. 
-Here's a breakdown of what the second script sample_it_team_members_generator.py does:
-
-1. **IT Team Member Names:** 
-
-The script starts by defining a list named it_team_members containing the names of IT team members. You can customize this list to include the actual names of your team members or use a name generator.
-
-2. **Group Names:**
-The script defines a list named groups containing the names of the groups: "NetworkAdmin", "LinuxAdmin", "DBAdmin", "CloudAdmin", and "Trainees".
-
-3. **Group Assignment and Distribution:**
- The script initializes an empty dictionary named group_members to hold the members of each group. It then shuffles the list of IT team members randomly using the random.shuffle function.The script distributes team members evenly into groups by iterating through the shuffled list of team members. The % operator is used to distribute members evenly based on the number of groups.
-
-4. **CSV File Creation:** 
-The script writes the generated data into the "it_team_members.csv" file. It uses the csv.writer class to create and write the CSV file.The header row is written as ['Name', 'Group'], and for each group, the script writes the username (constructed from the first and last name) and the corresponding group name.
-
-5. **Output:** 
-After the data is written to the CSV file, the script prints a success message.
-The resulting CSV file will contain a list of team members with their names and the groups they belong to. This script can be helpful for organizing and managing IT team members' information in a structured format.
-
-# Part 2 User Provisioning Automation - test_iam_user_create.py
-
-Additionally, I employed a Python script which utilizes the AWS CLI and IAM service to create users, assign them to groups, and set up a default password with a password reset requirement. 
-Here's a breakdown of the script :
-
-1. **IAM Policy JSON:**
- The `change_password_policy` JSON object defines an IAM policy that allows users to change their own passwords.
-
-2. **Function to Check User Existence:**
- The `user_exists` function checks if a user with the specified username already exists. It does this by using the AWS CLI command `aws iam get-user` and capturing the outcome.
-
-3. **Function to Create Users:**
- The `create_user_with_profile` function creates a new IAM user, adds the user to a specified group, sets up a login profile with a default password, and attaches the `ChangePasswordPolicy` to the user. The AWS CLI commands `aws iam create-user`, `aws iam add-user-to-group`, `aws iam create-login-profile`, and `aws iam put-user-policy` are used here.
-
-4. **Reading CSV File:**
- The script reads an input CSV file named `it_team_members.csv` that should contain user details and group assignments. It uses the `csv.DictReader` class to parse the CSV content.
-
-5. **Creating Users and Groups:**
- The script iterates through the CSV rows, extracting the username and group for each user. It then checks if the group is one of the desired groups ("NetworkAdmin", "LinuxAdmin", "DBAdmin", "CloudAdmin", "Trainees"). If so, it calls the `create_user_with_profile` function to create the user, adding them to the appropriate group. The `created_groups` set keeps track of which groups have already been created to ensure that only one user is created per group.
-
-The script essentially creates IAM users and assigns them to groups while setting up a default password and password reset requirement. It also handles checking for existing users and skipping duplicate user creation. 
-
-
+This project showcases not only the technical competence in user migration and IAM management but also the strategic vision to align security practices with operational efficiency. Through the utilization of automation, policy enforcement, and continuous monitoring, this initiative sets a precedent for secure and seamless user management in the AWS environment.
